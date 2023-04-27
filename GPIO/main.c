@@ -28,15 +28,15 @@ void WiringPiTest(){
 void enableLidar(bool enable) {
     if (enable) {
         digitalWrite(MOTOR_LIDAR, HIGH);
-        serialPutchar(Serial0, 0xA5);
-        serialPutchar(Serial0, 0x82);
-        serialPutchar(Serial0, 0x05);
-        serialPutchar(Serial0, (uint8_t)0x00);
-        serialPutchar(Serial0, (uint8_t)0x00);
-        serialPutchar(Serial0, (uint8_t)0x00);
-        serialPutchar(Serial0, (uint8_t)0x00);
-        serialPutchar(Serial0, (uint8_t)0x00);
-        serialPutchar(Serial0, 0x22);
+        serialPutchar(Serial1, 0xA5);
+        serialPutchar(Serial1, 0x82);
+        serialPutchar(Serial1, 0x05);
+        serialPutchar(Serial1, (uint8_t)0x00);
+        serialPutchar(Serial1, (uint8_t)0x00);
+        serialPutchar(Serial1, (uint8_t)0x00);
+        serialPutchar(Serial1, (uint8_t)0x00);
+        serialPutchar(Serial1, (uint8_t)0x00);
+        serialPutchar(Serial1, 0x22);
     } else {
         digitalWrite(MOTOR_LIDAR, LOW);
         serialPutchar(serial_fd, 0xA5);
