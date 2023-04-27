@@ -8,8 +8,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "../GPIO/WiringPi-master/wiringPi/wiringPi.h"
-#include "../GPIO/WiringPi-master/wiringPi/wiringPi.h"
 #include "WiringPi-master/wiringPi/wiringSerial.h"
+#include "../GPIO/WiringPi-master/wiringPi/softPwm.h"
 
 
 #define TX_LIDAR 8
@@ -30,9 +30,9 @@ void WiringPiTest(){
 }
 void enableLidar(bool enable) {
     if (enable) {
-        digitalWrite(MOTOR_LIDAR, 1023);
+        softPwmCreate(MOTOR_LIDAR, 100, 100);
         // measure of the delay of one command sent to the lidar
-        long int t0 = micros();
+        unsigned long t0 = micros();
         serialPutchar(Serial1, 0xA5);
         printf("Time to send the command : %ld\n", millis() - t0);
         serialPutchar(Serial1, 0x82);
@@ -44,7 +44,7 @@ void enableLidar(bool enable) {
         serialPutchar(Serial1, (uint8_t)0x00);
         serialPutchar(Serial1, 0x22);
     } else {
-        digitalWrite(MOTOR_LIDAR, 0);
+        softPwmStop(MOTOR_LIDAR);
         serialPutchar(Serial1, 0xA5);
         serialPutchar(Serial1, 0x25);
     }
@@ -62,22 +62,9 @@ int main() {
     // test of the wiringPi library
     WiringPiTest();
     // SETUP SERIAL
-    Serial0 = serialOpen("/dev/ttyS0", 115200);
     Serial1 = serialOpen("/dev/ttyS1", 115200);
     // open the serial port
     initLidar();
-
-
-    // test of the pins : TX_LIDAR, RX_LIDAR, MOTOR_LIDAR
-    pinMode(TX_LIDAR, OUTPUT);
-    pinMode(RX_LIDAR, INPUT);
-    pinMode(MOTOR_LIDAR, OUTPUT);
-    digitalWrite(TX_LIDAR, HIGH);
-    digitalWrite(MOTOR_LIDAR, HIGH);
-
-
-
-
     // close the serial port
     serialClose(Serial0);
     return 0;
