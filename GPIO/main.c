@@ -39,8 +39,8 @@ void enableLidar(bool enable) {
         serialPutchar(Serial1, 0x22);
     } else {
         digitalWrite(MOTOR_LIDAR, LOW);
-        serialPutchar(serial_fd, 0xA5);
-        serialPutchar(serial_fd, 0x25);
+        serialPutchar(Serial1, 0xA5);
+        serialPutchar(Serial1, 0x25);
     }
 }
 
