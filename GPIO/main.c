@@ -9,12 +9,12 @@
 #include <stdbool.h>
 #include "../GPIO/WiringPi-master/wiringPi/wiringPi.h"
 #include "../GPIO/WiringPi-master/wiringPi/wiringPi.h"
-
+#include "WiringPi-master/wiringPi/wiringSerial.h"
 
 
 #define TX_LIDAR 8
-#define RX_LIDAR 9
-#define MOTOR_LIDAR 16
+#define RX_LIDAR 10
+#define MOTOR_LIDAR 12
 
 int Serial0;
 int Serial1;
@@ -24,10 +24,13 @@ void WiringPiTest(){
     if (wiringPiSetup() == -1) {
         printf("WiringPi setup failed.\n");
     }
+    else {
+        printf("WiringPi setup successful.\n");
+    }
 }
 void enableLidar(bool enable) {
     if (enable) {
-        digitalWrite(MOTOR_LIDAR, HIGH);
+        analogWrite(MOTOR_LIDAR, 1023);
         serialPutchar(Serial1, 0xA5);
         serialPutchar(Serial1, 0x82);
         serialPutchar(Serial1, 0x05);
@@ -38,7 +41,7 @@ void enableLidar(bool enable) {
         serialPutchar(Serial1, (uint8_t)0x00);
         serialPutchar(Serial1, 0x22);
     } else {
-        digitalWrite(MOTOR_LIDAR, LOW);
+        analogWrite(MOTOR_LIDAR, 0);
         serialPutchar(Serial1, 0xA5);
         serialPutchar(Serial1, 0x25);
     }
@@ -72,5 +75,8 @@ int main() {
 
     printf("TX_LIDAR : %d\n", digitalRead(TX_LIDAR));
 
+
+    // close the serial port
+    serialClose(Serial0);
     return 0;
 }
