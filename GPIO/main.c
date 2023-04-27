@@ -34,7 +34,7 @@ void enableLidar(bool enable) {
         // measure of the delay of one command sent to the lidar
         unsigned long t0 = micros();
         serialPutchar(Serial1, 0xA5);
-        printf("Time to send the command : %ld\n", millis() - t0);
+        printf("Time to send the command : %ld\n", micros() - t0);
         serialPutchar(Serial1, 0x82);
         serialPutchar(Serial1, 0x05);
         serialPutchar(Serial1, (uint8_t)0x00);
