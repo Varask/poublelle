@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <../GPIO/WiringPi-master/wiringPi/wiringPi.h>
-#include <../GPIO/WiringPi-master/wiringPi/wiringPi.h>
+#include "../GPIO/WiringPi-master/wiringPi/wiringPi.h"
+#include "../GPIO/WiringPi-master/wiringPi/wiringPi.h"
 
 
 
@@ -25,12 +25,6 @@ void WiringPiTest(){
         printf("WiringPi setup failed.\n");
     }
 }
-
-void initLidar(){
-    pinMode(MOTOR_LIDAR, OUTPUT);
-    enableLidar(1);
-}
-
 void enableLidar(bool enable) {
     if (enable) {
         digitalWrite(MOTOR_LIDAR, HIGH);
@@ -50,6 +44,14 @@ void enableLidar(bool enable) {
     }
 }
 
+int initLidar(){
+    pinMode(MOTOR_LIDAR, OUTPUT);
+    enableLidar(1);
+    return 0;
+}
+
+
+
 int main() {
     // test of the wiringPi library
     WiringPiTest();
@@ -57,8 +59,9 @@ int main() {
     Serial0 = serialOpen("/dev/ttyS0", 115200);
     Serial1 = serialOpen("/dev/ttyS1", 115200);
     // open the serial port
-    SetupSerial0();
-    SetupSerial1();
+    initLidar();
+
+
     // test of the pins : TX_LIDAR, RX_LIDAR, MOTOR_LIDAR
     pinMode(TX_LIDAR, OUTPUT);
     pinMode(RX_LIDAR, INPUT);
