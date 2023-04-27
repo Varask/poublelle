@@ -73,7 +73,6 @@ int main() {
     digitalWrite(MOTOR_LIDAR, HIGH);
 
 
-    printf("TX_LIDAR : %d\n", digitalRead(TX_LIDAR));
 
 
     // close the serial port
