@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <../GPIO/WiringPi-master/wiringPi/wiringPi.h>
-#include <../GPIO/WiringPi-master/wiringPi/wiringPi.h>
+#include <wiringPi.h>
+#include <wiringPi.h>
 
 
 
