@@ -30,8 +30,11 @@ void WiringPiTest(){
 }
 void enableLidar(bool enable) {
     if (enable) {
-        analogWrite(MOTOR_LIDAR, 1023);
+        digitalWrite(MOTOR_LIDAR, 1023);
+        // measure of the delay of one command sent to the lidar
+        long int t0 = micros();
         serialPutchar(Serial1, 0xA5);
+        printf("Time to send the command : %ld\n", millis() - t0);
         serialPutchar(Serial1, 0x82);
         serialPutchar(Serial1, 0x05);
         serialPutchar(Serial1, (uint8_t)0x00);
@@ -41,7 +44,7 @@ void enableLidar(bool enable) {
         serialPutchar(Serial1, (uint8_t)0x00);
         serialPutchar(Serial1, 0x22);
     } else {
-        analogWrite(MOTOR_LIDAR, 0);
+        digitalWrite(MOTOR_LIDAR, 0);
         serialPutchar(Serial1, 0xA5);
         serialPutchar(Serial1, 0x25);
     }
