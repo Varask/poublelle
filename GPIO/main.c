@@ -4,7 +4,6 @@
 
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include "../GPIO/WiringPi-master/wiringPi/wiringPi.h"
@@ -14,7 +13,7 @@
 
 #define TX_LIDAR 8
 #define RX_LIDAR 10
-#define MOTOR_LIDAR 12
+#define MOTOR_LIDAR 1
 
 int Serial0;
 int Serial1;
@@ -63,6 +62,7 @@ int main() {
     WiringPiTest();
     // SETUP SERIAL
     Serial1 = serialOpen("/dev/ttyS1", 115200);
+
     // open the serial port
     initLidar();
     // close the serial port
