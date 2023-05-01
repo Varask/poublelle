@@ -6,16 +6,15 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "../GPIO/WiringPi-master/wiringPi/wiringPi.h"
+#include "WiringPi-master/wiringPi/wiringPi.h"
 #include "WiringPi-master/wiringPi/wiringSerial.h"
-#include "../GPIO/WiringPi-master/wiringPi/softPwm.h"
+#include "WiringPi-master/wiringPi/softPwm.h"
 
 
 #define TX_LIDAR 8
 #define RX_LIDAR 10
 #define MOTOR_LIDAR 1
 
-int Serial0;
 int Serial1;
 
 
@@ -48,7 +47,6 @@ void enableLidar(bool enable) {
         serialPutchar(Serial1, 0x25);
     }
 }
-
 int initLidar(){
     pinMode(MOTOR_LIDAR, OUTPUT);
     enableLidar(1);
@@ -65,7 +63,55 @@ int main() {
 
     // open the serial port
     initLidar();
-    // close the serial port
-    serialClose(Serial0);
+
+    // read the serial port for 10 seconds
+    unsigned long t0 = millis();
+    while (millis() - t0 < 10000) {
+        readRPLidar();
+    }
     return 0;
 }
+
+// DataRecup() : Récupère les données du lidar dans un tableau de uint8_t
+uint8_t DataRecup(){
+    int dataDispo = serialDataAvail(Serial1);
+    uint8_t data[dataDispo];
+
+    if (dataDispo > 0) {
+        for (int i = 0; i < dataDispo; i++) {
+            data[i] = serialGetchar(Serial1);
+        }
+    }
+
+    // print the data received
+    for (int i = 0; i < dataDispo; i++) {
+        printf("%d \n", data[i]);
+    }
+    return data[];
+}
+
+int DataTreatment(uint8_t* data){
+}
+bool DataVerification(uint8_t data){
+
+}
+uint8_t DataCoord(unint8_t data){
+
+}
+bool AddData(uint8_t data){
+
+}
+int readRPLidar(){
+    // Récupération des données.
+    uint8_t trame = DataRecup();
+    // TODO: Traitement de la trame.
+    DataTreatment(trame);
+    // TODO: Verification de la trame.
+    if (DataVerification(trame) == true){
+        // TODO: Calcul des coordonnées.
+        // TODO: Stockage des données.
+        AddData(DataCoord(trame)));
+    }
+
+}
+
