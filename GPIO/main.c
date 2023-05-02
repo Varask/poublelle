@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 #include "WiringPi-master/wiringPi/wiringPi.h"
 #include "WiringPi-master/wiringPi/wiringSerial.h"
 #include "WiringPi-master/wiringPi/softPwm.h"
@@ -111,7 +112,7 @@ int readRPLidar(){
 }
 
 // DataCoord() : Calcul les coordonnées du point
-uint8_t DataCoord(unint8_t data){
+uint8_t DataCoord(uint8_t data){
 
 }
 // AddData() : Ajoute les données dans le tableau de la map
