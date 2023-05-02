@@ -34,11 +34,11 @@ void WiringPiTest(){
 // enableLidar() : Active ou désactive le lidar
 void enableLidar(bool enable) {
     if (enable) {
+        printf("Lidar enabled.\n")
         softPwmCreate(MOTOR_LIDAR, 100, 100);
         // measure of the delay of one command sent to the lidar
         unsigned long t0 = micros();
         serialPutchar(Serial1, 0xA5);
-        printf("Time to send the command : %ld\n", micros() - t0);
         serialPutchar(Serial1, 0x82);
         serialPutchar(Serial1, 0x05);
         serialPutchar(Serial1, (uint8_t)0x00);
@@ -57,14 +57,17 @@ void enableLidar(bool enable) {
 int initLidar(){
     pinMode(MOTOR_LIDAR, OUTPUT);
     enableLidar(1);
+    print("Lidar initialized.\n")
     return 0;
 }
 // DataRecupVerif() : Vérifie si il y a assez de données pour traiter la trame
 bool DataRecupVerif(int Serial){
     if (serialDataAvail(Serial) > 80){
+        printf("DataRecupVerif : OK")
         return true;
     }
     else{
+        printf("DataRecupVerif : NOK")
         return false;
     }
 }
@@ -130,9 +133,11 @@ int main() {
     initLidar();
 
     // read the serial port for 10 seconds
+    /*
     unsigned long t0 = millis();
     while (millis() - t0 < 10000) {
         readRPLidar();
     }
+     */
     return 0;
 }
