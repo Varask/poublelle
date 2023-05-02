@@ -68,23 +68,25 @@ bool DataRecupVerif(int Serial){
     }
 }
 // DataRecup() : Récupère les données du lidar dans un tableau de uint8_t
-uint8_t DataRecup(int Serial){
-    uint8_t  data[80];
+uint8_t* DataRecup(int Serial){
+    static uint8_t  data[80];
     for (int i = 0; i < 80; i++) {
         data[i] = serialGetchar(Serial);
     }
-    return data[];
+    return data;
 }
+
 // DataTreatment() : Traite la trame du lidar
-uint8_t DataTreatment(uint8_t data[80]){
-    if data[0] == 0xA5{
+uint8_t* DataTreatment(uint8_t data[80]){
+    if (data[0] == 0xA5){
         printf("Trame valide");
         return data;
     }
     else{
-        return 0;
+        return NULL;
     }
 }
+
 // DataVerification() : Vérifie si la trame est valide
 bool DataVerification(uint8_t data){
 
@@ -94,15 +96,17 @@ bool DataVerification(uint8_t data){
 int readRPLidar(){
     // Récupération des données.
     bool verif = DataRecupVerif(Serial1);
-    uint8_t trame[80];
+    static uint8_t trame[80];
     if (verif == true){
-        trame = DataRecup(Serial1);
+        uint8_t* data = DataRecup(Serial1);
+        if(data != NULL)
+            memcpy(trame, data, 80);
     }
     else{
         return 0;
     }
     // TODO: Traitement de la trame.
-    DataTreatment(trame);
+    uint8_t* dataTreated = DataTreatment(trame);
     // TODO: Verification de la trame.
 }
 
