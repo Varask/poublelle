@@ -34,12 +34,12 @@ void WiringPiTest(){
 // enableLidar() : Active ou désactive le lidar
 void enableLidar(bool enable) {
     if (enable) {
-        printf("Lidar enabled.\n")
+        printf("Lidar enabled.\n");
         softPwmCreate(MOTOR_LIDAR, 100, 100);
         // measure of the delay of one command sent to the lidar
         unsigned long t0 = micros();
         serialPutchar(Serial1, 0xA5);
-        serialPutchar(Serial1, 0x82);
+        serialPutchar(Serial1, 0x20);
         serialPutchar(Serial1, 0x05);
         serialPutchar(Serial1, (uint8_t)0x00);
         serialPutchar(Serial1, (uint8_t)0x00);
@@ -57,17 +57,17 @@ void enableLidar(bool enable) {
 int initLidar(){
     pinMode(MOTOR_LIDAR, OUTPUT);
     enableLidar(1);
-    print("Lidar initialized.\n")
+    printf("Lidar initialized.\n");
     return 0;
 }
 // DataRecupVerif() : Vérifie si il y a assez de données pour traiter la trame
 bool DataRecupVerif(int Serial){
     if (serialDataAvail(Serial) > 80){
-        printf("DataRecupVerif : OK")
+        printf("DataRecupVerif : OK\n");
         return true;
     }
     else{
-        printf("DataRecupVerif : NOK")
+        printf("DataRecupVerif : NOK\n");
         return false;
     }
 }
@@ -83,7 +83,7 @@ uint8_t* DataRecup(int Serial){
 // DataTreatment() : Traite la trame du lidar
 uint8_t* DataTreatment(uint8_t data[80]){
     if (data[0] == 0xA5){
-        printf("Trame valide");
+        printf("Trame valide\n");
         return data;
     }
     else{
@@ -103,15 +103,15 @@ int readRPLidar(){
     static uint8_t trame[80];
     if (verif == true){
         uint8_t* data = DataRecup(Serial1);
-        if(data != NULL)
+        if(data != NULL){
             memcpy(trame, data, 80);
+        }
     }
     else{
         return 0;
     }
-    // TODO: Traitement de la trame.
+    // TODO: Traitement de la trame. Verification de la trame.
     uint8_t* dataTreated = DataTreatment(trame);
-    // TODO: Verification de la trame.
 }
 
 // DataCoord() : Calcul les coordonnées du point
@@ -132,12 +132,6 @@ int main() {
     // open the serial port
     initLidar();
 
-    // read the serial port for 10 seconds
-    /*
-    unsigned long t0 = millis();
-    while (millis() - t0 < 10000) {
-        readRPLidar();
-    }
-     */
+
     return 0;
 }
