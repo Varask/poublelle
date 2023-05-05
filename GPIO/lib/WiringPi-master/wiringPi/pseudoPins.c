@@ -41,7 +41,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include <wiringPi.h>
+#include "wiringPi.h"
 
 #include "pseudoPins.h"
 

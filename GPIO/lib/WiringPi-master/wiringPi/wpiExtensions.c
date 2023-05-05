@@ -36,7 +36,7 @@
 #include <sys/types.h>
 #include <fcntl.h>
 
-#include <wiringPi.h>
+#include "wiringPi.h"
 
 #include "mcp23008.h"
 #include "mcp23016.h"

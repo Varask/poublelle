@@ -1,6 +1,6 @@
 /*
- * max5322.c:
- *	Extend wiringPi with the MAX5322 SPI Digital to Analog convertor
+ * mcp3002.c:
+ *	Extend wiringPi with the MCP3002 SPI Analog to Digital convertor
  *	Copyright (c) 2012-2013 Gordon Henderson
  ***********************************************************************
  * This file is part of wiringPi:
@@ -22,63 +22,55 @@
  ***********************************************************************
  */
 
-#include <wiringPi.h>
-#include <wiringPiSPI.h>
+#include "wiringPi.h"
+#include "wiringPiSPI.h"
 
-#include "max5322.h"
+#include "mcp3002.h"
 
 /*
- * myAnalogWrite:
- *	Write analog value on the given pin
+ * myAnalogRead:
+ *	Return the analog value of the given pin
  *********************************************************************************
  */
 
-static void myAnalogWrite (struct wiringPiNodeStruct *node, int pin, int value)
+static int myAnalogRead (struct wiringPiNodeStruct *node, int pin)
 {
   unsigned char spiData [2] ;
-  unsigned char chanBits, dataBits ;
+  unsigned char chanBits ;
   int chan = pin - node->pinBase ;
 
   if (chan == 0)
-    chanBits = 0b01000000 ;
+    chanBits = 0b11010000 ;
   else
-    chanBits = 0b01010000 ;
-
-  chanBits |= ((value >> 12) & 0x0F) ;
-  dataBits  = ((value      ) & 0xFF) ;
+    chanBits = 0b11110000 ;
 
   spiData [0] = chanBits ;
-  spiData [1] = dataBits ;
+  spiData [1] = 0 ;
 
   wiringPiSPIDataRW (node->fd, spiData, 2) ;
+
+  return ((spiData [0] << 8) | (spiData [1] >> 1)) & 0x3FF ;
 }
 
+
 /*
- * max5322Setup:
- *	Create a new wiringPi device node for an max5322 on the Pi's
+ * mcp3002Setup:
+ *	Create a new wiringPi device node for an mcp3002 on the Pi's
  *	SPI interface.
  *********************************************************************************
  */
 
-int max5322Setup (const int pinBase, int spiChannel)
+int mcp3002Setup (const int pinBase, int spiChannel)
 {
   struct wiringPiNodeStruct *node ;
-  unsigned char spiData [2] ;
 
-  if (wiringPiSPISetup (spiChannel, 8000000) < 0)	// 10MHz Max
+  if (wiringPiSPISetup (spiChannel, 1000000) < 0)
     return FALSE ;
 
   node = wiringPiNewNode (pinBase, 2) ;
 
-  node->fd          = spiChannel ;
-  node->analogWrite = myAnalogWrite ;
-
-// Enable both DACs
-
-  spiData [0] = 0b11100000 ;
-  spiData [1] = 0 ;
-  
-  wiringPiSPIDataRW (node->fd, spiData, 2) ;
+  node->fd         = spiChannel ;
+  node->analogRead = myAnalogRead ;
 
   return TRUE ;
 }

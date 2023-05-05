@@ -1,7 +1,9 @@
 /*
- * mcp3002.c:
- *	Extend wiringPi with the MCP3002 SPI Analog to Digital convertor
+ * mcp3004.c:
+ *	Extend wiringPi with the MCP3004 SPI Analog to Digital convertor
  *	Copyright (c) 2012-2013 Gordon Henderson
+ *
+ *	Thanks also to "ShorTie" on IRC for some remote debugging help!
  ***********************************************************************
  * This file is part of wiringPi:
  *	https://github.com/WiringPi/WiringPi/
@@ -22,10 +24,10 @@
  ***********************************************************************
  */
 
-#include <wiringPi.h>
-#include <wiringPiSPI.h>
+#include "wiringPi.h"
+#include "wiringPiSPI.h"
 
-#include "mcp3002.h"
+#include "mcp3004.h"
 
 /*
  * myAnalogRead:
@@ -35,39 +37,37 @@
 
 static int myAnalogRead (struct wiringPiNodeStruct *node, int pin)
 {
-  unsigned char spiData [2] ;
+  unsigned char spiData [3] ;
   unsigned char chanBits ;
   int chan = pin - node->pinBase ;
 
-  if (chan == 0)
-    chanBits = 0b11010000 ;
-  else
-    chanBits = 0b11110000 ;
+  chanBits = 0b10000000 | (chan << 4) ;
 
-  spiData [0] = chanBits ;
-  spiData [1] = 0 ;
+  spiData [0] = 1 ;		// Start bit
+  spiData [1] = chanBits ;
+  spiData [2] = 0 ;
 
-  wiringPiSPIDataRW (node->fd, spiData, 2) ;
+  wiringPiSPIDataRW (node->fd, spiData, 3) ;
 
-  return ((spiData [0] << 8) | (spiData [1] >> 1)) & 0x3FF ;
+  return ((spiData [1] << 8) | spiData [2]) & 0x3FF ;
 }
 
 
 /*
- * mcp3002Setup:
- *	Create a new wiringPi device node for an mcp3002 on the Pi's
+ * mcp3004Setup:
+ *	Create a new wiringPi device node for an mcp3004 on the Pi's
  *	SPI interface.
  *********************************************************************************
  */
 
-int mcp3002Setup (const int pinBase, int spiChannel)
+int mcp3004Setup (const int pinBase, int spiChannel)
 {
   struct wiringPiNodeStruct *node ;
 
   if (wiringPiSPISetup (spiChannel, 1000000) < 0)
     return FALSE ;
 
-  node = wiringPiNewNode (pinBase, 2) ;
+  node = wiringPiNewNode (pinBase, 8) ;
 
   node->fd         = spiChannel ;
   node->analogRead = myAnalogRead ;

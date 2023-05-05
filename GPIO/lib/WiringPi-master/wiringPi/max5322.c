@@ -1,6 +1,6 @@
 /*
- * mcp4802.c:
- *	Extend wiringPi with the MCP4802 SPI Digital to Analog convertor
+ * max5322.c:
+ *	Extend wiringPi with the MAX5322 SPI Digital to Analog convertor
  *	Copyright (c) 2012-2013 Gordon Henderson
  ***********************************************************************
  * This file is part of wiringPi:
@@ -22,10 +22,10 @@
  ***********************************************************************
  */
 
-#include <wiringPi.h>
-#include <wiringPiSPI.h>
+#include "wiringPi.h"
+#include "wiringPiSPI.h"
 
-#include "mcp4802.h"
+#include "max5322.h"
 
 /*
  * myAnalogWrite:
@@ -40,12 +40,12 @@ static void myAnalogWrite (struct wiringPiNodeStruct *node, int pin, int value)
   int chan = pin - node->pinBase ;
 
   if (chan == 0)
-    chanBits = 0x30 ;
+    chanBits = 0b01000000 ;
   else
-    chanBits = 0xB0 ;
+    chanBits = 0b01010000 ;
 
-  chanBits |= ((value >> 4) & 0x0F) ;
-  dataBits  = ((value << 4) & 0xF0) ;
+  chanBits |= ((value >> 12) & 0x0F) ;
+  dataBits  = ((value      ) & 0xFF) ;
 
   spiData [0] = chanBits ;
   spiData [1] = dataBits ;
@@ -54,23 +54,31 @@ static void myAnalogWrite (struct wiringPiNodeStruct *node, int pin, int value)
 }
 
 /*
- * mcp4802Setup:
- *	Create a new wiringPi device node for an mcp4802 on the Pi's
+ * max5322Setup:
+ *	Create a new wiringPi device node for an max5322 on the Pi's
  *	SPI interface.
  *********************************************************************************
  */
 
-int mcp4802Setup (const int pinBase, int spiChannel)
+int max5322Setup (const int pinBase, int spiChannel)
 {
   struct wiringPiNodeStruct *node ;
+  unsigned char spiData [2] ;
 
-  if (wiringPiSPISetup (spiChannel, 1000000) < 0)
+  if (wiringPiSPISetup (spiChannel, 8000000) < 0)	// 10MHz Max
     return FALSE ;
 
   node = wiringPiNewNode (pinBase, 2) ;
 
   node->fd          = spiChannel ;
   node->analogWrite = myAnalogWrite ;
+
+// Enable both DACs
+
+  spiData [0] = 0b11100000 ;
+  spiData [1] = 0 ;
+  
+  wiringPiSPIDataRW (node->fd, spiData, 2) ;
 
   return TRUE ;
 }
