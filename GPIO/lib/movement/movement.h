@@ -22,6 +22,4 @@
 
 
 // functions
-uint8_t moveRobot(); // re
-
 #endif //POUBLELLE_MOVEMENT_H

@@ -7,13 +7,10 @@
 #define POUBLELLE_LIDAR_H
 
 // Librairies
-#include "../commun-function/common_function.h"
 #include "lidar.h"
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <stdlib.h>
-#include <string.h>
 #include "../WiringPi-master/wiringPi/wiringPi.h"
 #include "../WiringPi-master/wiringPi/wiringSerial.h"
 #include "../WiringPi-master/wiringPi/softPwm.h"
@@ -198,7 +195,6 @@ uint8_t DataCoord(uint8_t data){
 bool AddData(uint8_t data){
 
 }
-
 // AngleDiff : Calcul la différence entre 2 angle
 uint16_t AngleDiff(uint16_t angle1, uint16_t angle2){
     int diff = angle1 - angle2;

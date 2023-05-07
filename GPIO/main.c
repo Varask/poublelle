@@ -4,9 +4,9 @@
 
 // Librairies
 #include "lib/WiringPi-master/wiringPi/wiringPi.h"
-#include "lib/WiringPi-master/wiringPi/wiringSerial.h"
-#include "lib/WiringPi-master/wiringPi/softPwm.h"
-#include "lib/lidar/lidar.h"
+#include "./lib/WiringPi-master/wiringPi/wiringSerial.h"
+#include "./lib/WiringPi-master/wiringPi/softPwm.h"
+#include "./lib/lidar/lidar.h"
 
 // -------- MAIN -----------
 int main() {
