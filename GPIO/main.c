@@ -13,10 +13,12 @@ int main() {
     // test of the wiringPi library
     WiringPiTest();
     // SETUP SERIAL
-    Serial1 = serialOpen("/dev/ttyS1", 115200);
+    int SerialLidar= serialOpen("/dev/ttyS1", 115200);
+    int SerialMotorGauche = serialOpen("/dev/ttyUSB0", 115200);
+    int SerialMotorDroit = serialOpen("/dev/ttyUSB1", 115200);
     // SETUP LIDAR
-    initLidar(Serial1, MOTOR_LIDAR);
+    initLidar(SerialLidar, MOTOR_LIDAR);
     // READ LIDAR
-    readRPLidar(Serial1);
+    readRPLidar(SerialLidar);
     return 0;
 }

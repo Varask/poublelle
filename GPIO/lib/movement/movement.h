@@ -6,7 +6,8 @@
 #define POUBLELLE_MOVEMENT_H
 
 // Librairies
-
+#include <stdbool.h>
+#include <stdint.h>
 
 // Constantes
 
@@ -21,5 +22,6 @@
 
 
 // functions
+uint8_t moveRobot(); // re
 
 #endif //POUBLELLE_MOVEMENT_H

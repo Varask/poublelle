@@ -23,7 +23,7 @@ int Serial1;
 bool dataGathering = false;
 
 // structures
-struct syncPackets{
+ struct syncPackets {
     // start angle [7:0]
     uint8_t startAngle;
     // S  [8:7] - start flag of a new scan
@@ -31,8 +31,7 @@ struct syncPackets{
     // start angle checksum [14:8]
     uint8_t startAngle_checksum;
 };
-
-struct Cabin{
+ struct Cabin{
     // distance1 [5:0]
     uint8_t dist_1;
     // delta angle 1 [5:4]
@@ -50,24 +49,25 @@ struct Cabin{
     // delta angle 1 bis [3:0]
     uint8_t deltaAngle_1_bis;
 };
-
-struct Trame{
+ struct Trame {
     // the trame is composed of 80 bytes
     // 1 sync packets - 4 bytes
     // 16 cabins - 5 bytes each
     // sync packets
-    struct syncPackets trame_syncPackets;
+
+    struct  syncPackets trame_syncPackets;
     // cabins
     struct Cabin trame_cabin[16];
-
 };
+
+
 // Fonctions
 void WiringPiTest();
 void enableLidar(bool enable,int Serial,int pinMotor);
 int initLidar(int Serial, int pinMotor);
 bool stockPileRecupVerif(int Serial);
 bool AddData(uint8_t data);
-uint8_t* DataRecup(int Serial);
+uint8_t* DataRecup(int Serial, struct Trame DataTrame);
 uint8_t* DataTreatment(uint8_t data[80]);
 bool isSynchroByte(uint8_t syncByte1, uint8_t syncByte2);
 int readRPLidar(int Serial);
